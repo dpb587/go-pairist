@@ -1,10 +1,10 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"encoding/json"
 
 	"github.com/pkg/errors"
 )
@@ -12,13 +12,13 @@ import (
 var DefaultClient = NewClient(http.DefaultClient, "https://pairist-9de4d.firebaseio.com")
 
 type Client struct {
-	client *http.Client
+	client  *http.Client
 	baseURL string
 }
 
 func NewClient(client *http.Client, baseURL string) *Client {
 	return &Client{
-		client: client,
+		client:  client,
 		baseURL: baseURL,
 	}
 }

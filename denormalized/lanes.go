@@ -5,9 +5,9 @@ import (
 )
 
 type Lane struct {
-	ID string
+	ID     string
 	People []Entity
-	Roles []Entity
+	Roles  []Entity
 	Tracks []Entity
 }
 
@@ -29,12 +29,11 @@ func (l Lanes) ByRole(name string) []Lane {
 	return res
 }
 
-
 type Entity struct {
-	Color string
-	Icon string
-	Name string
-	Picture string
+	Color     string
+	Icon      string
+	Name      string
+	Picture   string
 	UpdatedAt uint
 }
 
@@ -50,10 +49,10 @@ func BuildLanes(historical *api.TeamHistorical) Lanes {
 			}
 
 			denormalizedEntity := Entity{
-				Color: entity.Color,
-				Icon: entity.Icon,
-				Name: entity.Name,
-				Picture: entity.Picture,
+				Color:     entity.Color,
+				Icon:      entity.Icon,
+				Name:      entity.Name,
+				Picture:   entity.Picture,
 				UpdatedAt: entity.UpdatedAt,
 			}
 
