@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dpb587/go-pairist/api"
+	"github.com/dpb587/go-pairist/api/anonymous"
 )
 
 func main() {
-	lists, err := api.DefaultClient.GetTeamLists(os.Args[1])
+	lists, err := anonymous.DefaultClient.GetTeamLists(os.Args[1])
 	if err != nil {
 		panic(err)
 	}
