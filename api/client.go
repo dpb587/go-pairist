@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	"github.com/pkg/errors"
 )
@@ -33,7 +34,7 @@ func (c *Client) get(path string, data interface{}) error {
 			return err
 		}
 
-		uri = fmt.Sprintf("%s?auth=%s", uri, token)
+		uri = fmt.Sprintf("%s?auth=%s", uri, url.QueryEscape(token))
 	}
 
 	res, err := c.client.Get(uri)
@@ -44,6 +45,16 @@ func (c *Client) get(path string, data interface{}) error {
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return errors.Wrap(err, "reading response body")
+	}
+
+	var errcheck struct {
+		Error string `json:"error"`
+	}
+
+	// ignore error since successful response data may not be unmarshallable
+	_ = json.Unmarshal(bytes, &errcheck)
+	if errcheck.Error != "" {
+		return errors.Wrap(errors.New(errcheck.Error), "verifying response")
 	}
 
 	err = json.Unmarshal(bytes, data)
