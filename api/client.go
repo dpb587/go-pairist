@@ -86,3 +86,16 @@ func (c *Client) GetTeamLists(team string) (*TeamLists, error) {
 
 	return &res, nil
 }
+
+type TeamHistoricalFull map[int]TeamHistorical
+
+func (c *Client) GetTeamHistorical(team string) (*TeamHistoricalFull, error) {
+	var res TeamHistoricalFull
+
+	err := c.get(fmt.Sprintf("teams/%s/history.json", team), &res)
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
