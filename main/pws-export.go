@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-	// https://godoc.org/encoding/csv
 
 	"github.com/dpb587/go-pairist/api"
 	"github.com/dpb587/go-pairist/denormalized"
