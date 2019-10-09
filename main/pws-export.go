@@ -13,6 +13,10 @@ import (
 )
 
 func main() {
+	if os.Getenv("PAIRIST_API_KEY") == "" {
+		panic("PAIRIST_API_KEY required. # TODO tell users how to find it.")
+	}
+
 	client := api.DefaultClient
 
 	if os.Getenv("PAIRIST_API_KEY") != "" && len(os.Args) > 2 {
