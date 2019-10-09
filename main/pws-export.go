@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"time"
 
 	"github.com/dpb587/go-pairist/api"
@@ -14,7 +15,8 @@ import (
 
 func main() {
 	if os.Getenv("PAIRIST_API_KEY") == "" {
-		panic("PAIRIST_API_KEY required. # TODO tell users how to find it.")
+		fmt.Printf("PAIRIST_API_KEY required. # TODO tell users how to find it.\n")
+		os.Exit(1)
 	}
 
 	client := api.DefaultClient
@@ -29,6 +31,11 @@ func main() {
 				Password: os.Args[2],
 			},
 		)
+	}
+
+	if len(os.Args) < 3 {
+		fmt.Printf("Usage: go run ./%s USERNAME PASSWORD\n", path.Base(os.Args[0]))
+		os.Exit(1)
 	}
 
 	historical, err := client.GetTeamHistorical(os.Args[1])
