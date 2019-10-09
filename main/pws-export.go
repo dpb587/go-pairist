@@ -19,6 +19,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	if len(os.Args) < 3 {
+		fmt.Printf("Usage: go run ./%s USERNAME PASSWORD\n", path.Base(os.Args[0]))
+		os.Exit(1)
+	}
+
 	client := api.DefaultClient
 
 	if os.Getenv("PAIRIST_API_KEY") != "" && len(os.Args) > 2 {
@@ -31,11 +36,6 @@ func main() {
 				Password: os.Args[2],
 			},
 		)
-	}
-
-	if len(os.Args) < 3 {
-		fmt.Printf("Usage: go run ./%s USERNAME PASSWORD\n", path.Base(os.Args[0]))
-		os.Exit(1)
 	}
 
 	historical, err := client.GetTeamHistorical(os.Args[1])
