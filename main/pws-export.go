@@ -45,8 +45,6 @@ func main() {
 
 	pairPlans := denormalized.BuildHistory(*historical)
 
-	fmt.Printf("historical = %#+v\n", pairPlans)
-
 	w := csv.NewWriter(os.Stdout)
 	w.Comma = '\t'
 
