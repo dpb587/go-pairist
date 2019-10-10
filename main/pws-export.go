@@ -48,7 +48,8 @@ func main() {
 	w := csv.NewWriter(os.Stdout)
 	w.Comma = '\t'
 
-	trackNames := []string{"Support 😇", "Deploy Queue 🚀", "Top of Backlog"}
+	trackNames := []string{"Deploy Queue 🚀", "Support 😇", "Top of Backlog"}
+	w.Write(append([]string{"Time"}, trackNames...))
 
 	for _, plan := range pairPlans {
 		record := []string{plan.Timestamp.Format(time.RFC3339)}
