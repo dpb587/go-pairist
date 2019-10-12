@@ -65,8 +65,8 @@ func (c *Client) get(path string, data interface{}) error {
 	return nil
 }
 
-func (c *Client) GetTeamCurrent(team string) (*TeamHistorical, error) {
-	var res TeamHistorical
+func (c *Client) GetTeamCurrent(team string) (*TeamPairing, error) {
+	var res TeamPairing
 
 	err := c.get(fmt.Sprintf("teams/%s/current.json", team), &res)
 	if err != nil {
@@ -87,10 +87,8 @@ func (c *Client) GetTeamLists(team string) (*TeamLists, error) {
 	return &res, nil
 }
 
-type TeamHistoricalFull map[int]TeamHistorical
-
-func (c *Client) GetTeamHistorical(team string) (*TeamHistoricalFull, error) {
-	var res TeamHistoricalFull
+func (c *Client) GetTeamPairing(team string) (*TeamPairingHistory, error) {
+	var res TeamPairingHistory
 
 	err := c.get(fmt.Sprintf("teams/%s/history.json", team), &res)
 	if err != nil {

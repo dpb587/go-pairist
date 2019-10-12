@@ -1,5 +1,12 @@
 package denormalized
 
+import "time"
+
+type TeamPairing struct {
+	Timestamp time.Time
+	Lanes     Lanes
+}
+
 type Entity struct {
 	Color     string
 	Icon      string
