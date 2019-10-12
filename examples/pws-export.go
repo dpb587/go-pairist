@@ -38,7 +38,7 @@ func main() {
 		)
 	}
 
-	historical, err := client.GetTeamPairing(os.Args[1])
+	historical, err := client.GetTeamHistorical(os.Args[1])
 	if err != nil {
 		panic(err)
 	}

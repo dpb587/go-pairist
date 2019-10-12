@@ -87,7 +87,7 @@ func (c *Client) GetTeamLists(team string) (*TeamLists, error) {
 	return &res, nil
 }
 
-func (c *Client) GetTeamPairing(team string) (*TeamPairingHistory, error) {
+func (c *Client) GetTeamHistorical(team string) (*TeamPairingHistory, error) {
 	var res TeamPairingHistory
 
 	err := c.get(fmt.Sprintf("teams/%s/history.json", team), &res)

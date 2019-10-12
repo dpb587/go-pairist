@@ -25,7 +25,7 @@ type exportHistoricalPairingLane struct {
 }
 
 func (c *ExportHistoricalCmd) Execute(_ []string) error {
-	rawHistorical, err := c.GetClient().GetTeamPairing(c.TeamName)
+	rawHistorical, err := c.GetClient().GetTeamHistorical(c.TeamName)
 	if err != nil {
 		return errors.Wrap(err, "fetching lists")
 	}
