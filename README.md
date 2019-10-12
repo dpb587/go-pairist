@@ -15,7 +15,7 @@ For anonymous access to the default Pairist server, use `api.DefaultClient`. To 
       &api.Auth{
         APIKey:   api.DefaultFirebaseAPIKey,
         Team:     os.Getenv("PAIRIST_TEAM_NAME"),
-        Password: os.Getenv("PAIRIST_TEAM_NAME"),
+        Password: os.Getenv("PAIRIST_TEAM_PASSWORD"),
       },
     )
 
