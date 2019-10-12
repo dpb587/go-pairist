@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var DefaultClient = NewClient(http.DefaultClient, DefaultDatabaseURL, nil)
+var DefaultClient = NewClient(http.DefaultClient, DefaultFirebaseURL, nil)
 
 type Client struct {
 	client  *http.Client

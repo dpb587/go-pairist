@@ -29,7 +29,7 @@ func main() {
 	if os.Getenv("PAIRIST_API_KEY") != "" && len(os.Args) > 2 {
 		client = api.NewClient(
 			http.DefaultClient,
-			api.DefaultDatabaseURL,
+			api.DefaultFirebaseURL,
 			&api.Auth{
 				APIKey:   os.Getenv("PAIRIST_API_KEY"),
 				Team:     os.Args[1],
