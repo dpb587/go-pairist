@@ -1,6 +1,11 @@
 package denormalized
 
-import "github.com/dpb587/go-pairist/api"
+import (
+	"sort"
+	"time"
+
+	"github.com/dpb587/go-pairist/api"
+)
 
 func BuildLanes(historical *api.TeamHistorical) Lanes {
 	var lanes Lanes
@@ -35,4 +40,21 @@ func BuildLanes(historical *api.TeamHistorical) Lanes {
 	}
 
 	return lanes
+}
+
+type PairingPlan struct {
+	Timestamp time.Time
+	Lanes     Lanes
+}
+
+func BuildHistory(historical api.TeamHistoricalFull) []PairingPlan {
+	var result []PairingPlan
+
+	for dayIdx, day := range historical {
+		result = append(result, PairingPlan{Timestamp: time.Unix(int64(dayIdx*3600), 0), Lanes: BuildLanes(&day)})
+	}
+
+	sort.Slice(result, func(i, j int) bool { return result[i].Timestamp.Before(result[j].Timestamp) })
+
+	return result
 }
