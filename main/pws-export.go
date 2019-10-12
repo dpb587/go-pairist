@@ -61,6 +61,12 @@ func main() {
 				var people [3]string
 
 				for peopleIdx, person := range track.People {
+					if peopleIdx > 2 {
+						fmt.Fprintf(os.Stderr, "WARN: skipping person #%d in role %s on %s\n", peopleIdx+1, trackName, plan.Timestamp.Format(time.RFC3339))
+
+						continue
+					}
+
 					people[peopleIdx] = person.Name
 				}
 
