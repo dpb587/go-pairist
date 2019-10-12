@@ -14,11 +14,6 @@ import (
 )
 
 func main() {
-	if os.Getenv("PAIRIST_API_KEY") == "" {
-		fmt.Printf("PAIRIST_API_KEY required. # TODO tell users how to find it.\n")
-		os.Exit(1)
-	}
-
 	if len(os.Args) < 3 {
 		fmt.Printf("Usage: go run ./%s USERNAME PASSWORD\n", path.Base(os.Args[0]))
 		os.Exit(1)
@@ -31,7 +26,7 @@ func main() {
 			http.DefaultClient,
 			api.DefaultFirebaseURL,
 			&api.Auth{
-				APIKey:   os.Getenv("PAIRIST_API_KEY"),
+				APIKey:   api.DefaultFirebaseAPIKey,
 				Team:     os.Args[1],
 				Password: os.Args[2],
 			},
