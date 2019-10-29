@@ -19,19 +19,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	client := api.DefaultClient
-
-	if os.Getenv("PAIRIST_API_KEY") != "" && len(os.Args) > 2 {
-		client = api.NewClient(
-			http.DefaultClient,
-			api.DefaultFirebaseURL,
-			&api.Auth{
-				APIKey:   api.DefaultFirebaseAPIKey,
-				Team:     os.Args[1],
-				Password: os.Args[2],
-			},
-		)
-	}
+	client := api.NewClient(
+		http.DefaultClient,
+		api.DefaultFirebaseURL,
+		&api.Auth{
+			APIKey:   api.DefaultFirebaseAPIKey,
+			Team:     os.Args[1],
+			Password: os.Args[2],
+		},
+	)
 
 	historical, err := client.GetTeamHistorical(os.Args[1])
 	if err != nil {
