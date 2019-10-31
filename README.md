@@ -43,7 +43,7 @@ for _, role := range denormalized.BuildLanes(pairing).ByRole("interrupt") {
 For local use, ensure you have a recent version of Go installed before cloning and using.
 
 ```console
-$ git clone github.com/dpb587/go-pairist
+$ git clone git@github.com:dpb587/go-pairist.git
 $ cd go-pairist
 $ go test ./...
 ```
