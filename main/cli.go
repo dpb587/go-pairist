@@ -16,35 +16,18 @@ type cli struct {
 }
 
 type Opts struct {
-	FirebaseAPIKey string `long:"firebase-api-key" description:"Firebase API key" hidden:"true"`
-	FirebaseURL    string `long:"firebase-url" description:"Firebase API key" hidden:"true"`
-
-	TeamName     string `long:"team-name" description:"Team name" env:"PAIRIST_TEAM_NAME"`
-	TeamPassword string `long:"team-password" description:"Team password (required if team is private)" env:"PAIRIST_TEAM_PASSWORD"`
+	FirebaseAPIKey    string `long:"firebase-api-key" description:"Firebase API key" env:"PAIRIST_FIREBASE_API_KEY"`
+	FirebaseProjectID string `long:"firebase-project-id" description:"Firebase project ID" env:"PAIRIST_FIREBASE_PROJECT_ID"`
+	Email             string `long:"email" description:"Team name" env:"PAIRIST_EMAIL"`
+	Password          string `long:"password" description:"Team password" env:"PAIRIST_PASSWORD"`
 }
 
 func (o Opts) GetClient() *api.Client {
-	var auth *api.Auth
-
-	if o.TeamPassword != "" {
-		var firebaseAPIKey = api.DefaultFirebaseAPIKey
-
-		if v := o.FirebaseAPIKey; v != "" {
-			firebaseAPIKey = v
-		}
-
-		auth = &api.Auth{
-			APIKey:   firebaseAPIKey,
-			Team:     o.TeamName,
-			Password: o.TeamPassword,
-		}
+	auth := &api.Auth{
+		APIKey:   o.FirebaseAPIKey,
+		Email:    o.Email,
+		Password: o.Password,
 	}
 
-	var firebaseURL = api.DefaultFirebaseURL
-
-	if v := o.FirebaseURL; v != "" {
-		firebaseURL = v
-	}
-
-	return api.NewClient(http.DefaultClient, firebaseURL, auth)
+	return api.NewClient(http.DefaultClient, o.FirebaseProjectID, auth)
 }

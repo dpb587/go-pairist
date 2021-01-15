@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strconv"
 	"time"
 
 	"github.com/dpb587/go-pairist/api"
-	"github.com/dpb587/go-pairist/denormalized"
 )
 
 func main() {
@@ -21,10 +21,10 @@ func main() {
 
 	client := api.NewClient(
 		http.DefaultClient,
-		api.DefaultFirebaseURL,
+		"example-project-id",
 		&api.Auth{
-			APIKey:   api.DefaultFirebaseAPIKey,
-			Team:     os.Args[1],
+			APIKey:   "example-api-key",
+			Email:    os.Args[1],
 			Password: os.Args[2],
 		},
 	)
@@ -34,31 +34,36 @@ func main() {
 		panic(err)
 	}
 
-	pairPlans := denormalized.BuildHistory(*historical)
-
 	w := csv.NewWriter(os.Stdout)
 	w.Comma = '\t'
 
 	trackNames := []string{"Deploy Queue 🚀", "Support 😇", "Top of Backlog"}
 	w.Write(append([]string{"Time"}, trackNames...))
 
-	for _, plan := range pairPlans {
-		record := []string{plan.Timestamp.Format(time.RFC3339)}
+	for rawTimestamp, pairing := range *historical {
+		var timestampInt int64
+		if timestampInt, err = strconv.ParseInt(rawTimestamp, 10, 64); err != nil {
+			fmt.Fprintf(os.Stderr, "WARN: failed to parse timestamp %s; skipping\n", rawTimestamp)
+			continue
+		}
+
+		formattedTimestamp := time.Unix(timestampInt/1000, 0).Format(time.RFC3339)
+		record := []string{formattedTimestamp}
 
 		for _, trackName := range trackNames {
-			tracks := plan.Lanes.ByTrack(trackName)
+			tracks := pairing.ByTrack(trackName)
 
 			for _, track := range tracks {
 				var people [3]string
 
 				for peopleIdx, person := range track.People {
 					if peopleIdx > 2 {
-						fmt.Fprintf(os.Stderr, "WARN: skipping person #%d in role %s on %s\n", peopleIdx+1, trackName, plan.Timestamp.Format(time.RFC3339))
+						fmt.Fprintf(os.Stderr, "WARN: skipping person #%d in role %s on %s\n", peopleIdx+1, trackName, formattedTimestamp)
 
 						continue
 					}
 
-					people[peopleIdx] = person.Name
+					people[peopleIdx] = person.DisplayName
 				}
 
 				record = append(record, people[0], people[1], people[2])

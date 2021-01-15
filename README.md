@@ -1,39 +1,29 @@
 # github.com/dpb587/go-pairist
 
-A simple, unofficial Go module for reading [Pairist](https://pair.ist/) data.
+A simple, unofficial Go module for reading [Pairist](https://github.com/pivotal-cf/pairist) data.
 
 ## API
 
-The [`api`](api/) package exposes the basic endpoints for reading current and historical pairings, as well as team lists. For anonymous access to the default Pairist server, use `api.DefaultClient`.
+The [`api`](api/) package exposes the basic endpoints for reading current and historical pairings, as well as team lists.
 
 ```go
 import "github.com/dpb587/go-pairist/api"
 
-client := api.DefaultClient
-
-pairing, err := client.GetTeamCurrent("my-team-name")
-```
-
-To authenticate with team credentials, against a different environment, or API key, explicitly create and configure a client:
-
-```go
 client := api.NewClient(
   http.DefaultClient,
-  api.DefaultFirebaseURL,
+  os.Getenv("PAIRIST_FIREBASE_PROJECT_ID"),
   &api.Auth{
-    APIKey:   api.DefaultFirebaseAPIKey,
-    Team:     os.Getenv("PAIRIST_TEAM_NAME"),
-    Password: os.Getenv("PAIRIST_TEAM_PASSWORD"),
+    APIKey:   os.Getenv("PAIRIST_FIREBASE_API_KEY"),
+    Team:     os.Getenv("PAIRIST_EMAIL"),
+    Password: os.Getenv("PAIRIST_PASSWORD"),
   },
 )
-```
 
-The `api` package exposes the data in the raw form used by Pairist which is not very easy to interact with. For more useful views and methods, use the [`denormalized`](denormalized/) package.
+pairing, err := client.GetTeamCurrent("my-team-id")
 
-```go
-for _, role := range denormalized.BuildLanes(pairing).ByRole("interrupt") {
-  for _, person := range role.People {
-    fmt.Printf("%s\t%s\n", person.Name, person.Picture)
+for _, pair := range pairing.ByRole("interrupt") {
+  for _, person := range pair.People {
+    fmt.Printf("%s\n", person.DisplayName)
   }
 }
 ```
@@ -58,11 +48,13 @@ Usage:
   main [OPTIONS] <command>
 
 Application Options:
-      --team-name=     Team name [$PAIRIST_TEAM_NAME]
-      --team-password= Team password (required if team is private) [$PAIRIST_TEAM_PASSWORD]
+      --firebase-api-key=    Firebase API key [$PAIRIST_FIREBASE_API_KEY]
+      --firebase-project-id= Firebase project ID [$PAIRIST_FIREBASE_PROJECT_ID]
+      --email=               Team name [$PAIRIST_EMAIL]
+      --password=            Team password [$PAIRIST_PASSWORD]
 
 Help Options:
-  -h, --help           Show this help message
+  -h, --help                 Show this help message
 
 Available commands:
   export-historical  Export historical pairing data

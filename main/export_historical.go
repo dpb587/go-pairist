@@ -3,14 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
-	"github.com/dpb587/go-pairist/denormalized"
 	"github.com/pkg/errors"
 )
 
 type ExportHistoricalCmd struct {
 	*Opts `no-flag:"true"`
+
+	Args ExportHistoricalArgs `positional-args:"true" required:"true"`
+}
+
+type ExportHistoricalArgs struct {
+	Team string `positional-arg-name:"TEAM" description:"Team ID"`
 }
 
 type exportHistoricalPairing struct {
@@ -25,21 +31,26 @@ type exportHistoricalPairingLane struct {
 }
 
 func (c *ExportHistoricalCmd) Execute(_ []string) error {
-	rawHistorical, err := c.GetClient().GetTeamHistorical(c.TeamName)
+	historical, err := c.GetClient().GetTeamHistorical(c.Args.Team)
 	if err != nil {
-		return errors.Wrap(err, "fetching lists")
+		return errors.Wrap(err, "fetching history")
 	}
 
-	for _, pairing := range denormalized.BuildHistory(*rawHistorical) {
-		record := exportHistoricalPairing{
-			Timestamp: pairing.Timestamp.Format(time.RFC3339),
+	for timestamp, pairing := range *historical {
+		var timestampInt int64
+		if timestampInt, err = strconv.ParseInt(timestamp, 10, 64); err != nil {
+			return errors.Wrap(err, "parsing timestamp")
 		}
 
-		for _, lane := range pairing.Lanes {
+		record := exportHistoricalPairing{
+			Timestamp: time.Unix(timestampInt/1000, 0).Format(time.RFC3339),
+		}
+
+		for _, lane := range pairing.Pairs {
 			exportLane := exportHistoricalPairingLane{}
 
 			for _, person := range lane.People {
-				exportLane.People = append(exportLane.People, person.Name)
+				exportLane.People = append(exportLane.People, person.DisplayName)
 			}
 
 			for _, role := range lane.Roles {
