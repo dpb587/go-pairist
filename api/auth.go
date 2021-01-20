@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -13,7 +12,7 @@ import (
 
 type Auth struct {
 	APIKey   string
-	Team     string
+	Email    string
 	Password string
 
 	idToken      string
@@ -30,7 +29,7 @@ func (a *Auth) IDToken() (string, error) {
 		}
 
 		resp, err := client.Relyingparty.VerifyPassword(&identitytoolkit.IdentitytoolkitRelyingpartyVerifyPasswordRequest{
-			Email:             fmt.Sprintf("%s@pair.ist", a.Team),
+			Email:             a.Email,
 			Password:          a.Password,
 			ReturnSecureToken: true,
 		}).Context(ctx).Do()

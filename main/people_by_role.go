@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/dpb587/go-pairist/denormalized"
 	"github.com/pkg/errors"
 )
 
@@ -14,18 +13,19 @@ type PeopleByRoleCmd struct {
 }
 
 type PeopleByRoleArgs struct {
-	Name string `positional-arg-name:"ROLE-NAME" description:"Name of role to show"`
+	Team     string `positional-arg-name:"TEAM" description:"Team ID"`
+	RoleName string `positional-arg-name:"ROLE-NAME" description:"Name of role to show"`
 }
 
 func (c *PeopleByRoleCmd) Execute(_ []string) error {
-	plan, err := c.GetClient().GetTeamCurrent(c.TeamName)
+	pairing, err := c.GetClient().GetTeamCurrent(c.Args.Team)
 	if err != nil {
 		return errors.Wrap(err, "fetching team")
 	}
 
-	for _, role := range denormalized.BuildLanes(plan).ByRole(c.Args.Name) {
+	for _, role := range pairing.ByRole(c.Args.RoleName) {
 		for _, person := range role.People {
-			fmt.Printf("%s\t%s\n", person.Name, person.Picture)
+			fmt.Printf("%s\n", person.DisplayName)
 		}
 	}
 

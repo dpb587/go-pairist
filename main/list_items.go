@@ -13,22 +13,23 @@ type ListItemsCmd struct {
 }
 
 type ListItemsArgs struct {
+	Team  string `positional-arg-name:"TEAM" description:"Team ID"`
 	Title string `positional-arg-name:"LIST-TITLE" description:"Title of list to show"`
 }
 
 func (c *ListItemsCmd) Execute(_ []string) error {
-	lists, err := c.GetClient().GetTeamLists(c.TeamName)
+	lists, err := c.GetClient().GetTeamLists(c.Args.Team)
 	if err != nil {
 		return errors.Wrap(err, "fetching lists")
 	}
 
-	for _, list := range *lists {
+	for _, list := range *&lists.Lists {
 		if list.Title != c.Args.Title {
 			continue
 		}
 
 		for _, item := range list.Items {
-			fmt.Printf("%s\t%s\n", map[bool]string{false: "UNCHECKED", true: "CHECKED"}[item.Checked], item.Title)
+			fmt.Printf("%s\n", item.Text)
 		}
 	}
 
