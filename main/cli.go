@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/dpb587/go-pairist/api"
+	"github.com/dpb587/go-pairist/v2/api"
 )
 
 type cli struct {

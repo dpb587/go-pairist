@@ -1,4 +1,4 @@
-module github.com/dpb587/go-pairist
+module github.com/dpb587/go-pairist/v2
 
 go 1.13
 

@@ -7,7 +7,7 @@ A simple, unofficial Go module for reading [Pairist](https://github.com/pivotal-
 The [`api`](api/) package exposes the basic endpoints for reading current and historical pairings, as well as team lists.
 
 ```go
-import "github.com/dpb587/go-pairist/api"
+import "github.com/dpb587/go-pairist/v2/api"
 
 client := api.NewClient(
   http.DefaultClient,
